@@ -104,23 +104,13 @@ app.get("/books/:id", function (req, res) {
 
 })
 
-app.get('/books/delete/:id', (req, res)=>{
-  if (req.params.id) {
-    Books.findOneAndDelete({ [Books._id] : req.params.id })
-        .then(deletedBook => {
-            if (!deletedBook) return res.status(404).json({ status: 404, error: true, message: `The movie ${req.params.id} does not exist` });
-            Books.find()
-                .then(books => {
-                    res.status(200).json({ status: 200, data: books })
-                })
-                .catch(err => {
-                    res.status(404).json(err);
-                })
-        })
-        .catch(err => {
-            res.status(404).json(err);
-        })
-}
+app.delete("/books/delete/:id", (req, res) => {
+    const id = req.params.id
+    Books.findByIdAndDelete(id).then(deleteBook => {
+        Books.find()
+            .then((result) => res.send(result))
+            .catch((err) => console.log(err));
+    }).catch((err) => console.log(err));
 })
 
 
